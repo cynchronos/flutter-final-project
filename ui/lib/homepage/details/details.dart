@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:show_up_animation/show_up_animation.dart';
 import 'package:ui/theme.dart';
+import 'package:intl/intl.dart';
 
 class DetailsPage extends StatefulWidget {
   const DetailsPage({
@@ -11,14 +12,14 @@ class DetailsPage extends StatefulWidget {
     required this.desc,
     required this.photos,
     required this.interest,
-    required this.price, 
+    required this.price,
     required this.rating,
   });
 
   final String title;
   final String desc;
   final String image;
-  final String price;
+  final int price;
   final String destination;
   final List<String> photos;
   final List<String> interest;
@@ -29,10 +30,12 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  final formattedPrice = NumberFormat("#,###", "id_IDR");
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    String priceText = formattedPrice.format(widget.price);
 
     return Scaffold(
       backgroundColor: const Color(0xffFAFAFA),
@@ -51,7 +54,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'IDR ${widget.price}',
+                          'IDR $priceText',
                           style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -170,9 +173,12 @@ class _DetailsPageState extends State<DetailsPage> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 50),
-                        child: Image.asset('assets/icons/navigationemblem.png', width: 108, height: 24,)
-                      ),
+                          padding: const EdgeInsets.only(top: 50),
+                          child: Image.asset(
+                            'assets/icons/navigationemblem.png',
+                            width: 108,
+                            height: 24,
+                          )),
                     ],
                   ),
                 ),

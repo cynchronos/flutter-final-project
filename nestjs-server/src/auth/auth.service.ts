@@ -9,7 +9,7 @@ export class AuthService {
     try {
       const user = await this.usersService.findOne(username);
 
-      if (user && user.password !== password) {
+      if (!user || user.password !== password) {
         const error = new Error();
         error.message = 'Username atau password salah';
 
@@ -21,8 +21,8 @@ export class AuthService {
         message: 'Login Sukses',
         data: {
           username: user.username,
-          firstName: user.firstName,
-          lastName: user.lastName,
+          firstname: user.firstname,
+          lastname: user.lastname,
           email: user.email,
           phone: user.phone,
         },

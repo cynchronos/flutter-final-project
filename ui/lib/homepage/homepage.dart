@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ui/theme.dart';
 import 'details/details.dart';
+import 'homepage_service.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.firstname});
+
+  final String firstname;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -12,118 +15,168 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    Future<Map<String, List<dynamic>>> fetchDestinationData() async {
+      FetchService fetchData = FetchService();
+      Object destination = await fetchData.fetchDestination();
+
+      Map data = destination as Map;
+
+      List<dynamic> destinationList = data['data'];
+
+      List<dynamic> popularDest = [];
+      List<dynamic> commonDest = [];
+
+      for (int i = 0; i < destinationList.length; i++) {
+        final item = destinationList[i];
+        if (item['type'] == 'popular') {
+          popularDest.add(item);
+        } else if (item['type'] == 'common') {
+          commonDest.add(item);
+        }
+      }
+
+      return {
+        'popular': popularDest,
+        'common': commonDest,
+      };
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xffFAFAFA),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Howdy,\n${'Izukishi'}',
-                          style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                              height: 1.5),
+        body: FutureBuilder<Map<String, List<dynamic>>>(
+            future: fetchDestinationData(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final popularDest = snapshot.data!['popular'];
+                final commonDest = snapshot.data!['common'];
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Howdy,\n${widget.firstname}',
+                                  style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.5),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  'Where to fly today?',
+                                  style: subgeneralText,
+                                ),
+                              ],
+                            ),
+                            // button circle profile
+                            InkWell(
+                              borderRadius: BorderRadius.circular(35),
+                              onTap: () {
+                                fetchDestinationData();
+                              },
+                              child: const CircleAvatar(
+                                radius: 35,
+                                backgroundImage:
+                                    AssetImage('assets/images/profile.jpg'),
+                              ),
+                            )
+                          ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          'Where to fly today?',
-                          style: subgeneralText,
-                        ),
-                      ],
-                    ),
-                    // button circle profile
-                    InkWell(
-                      borderRadius: BorderRadius.circular(35),
-                      onTap: () {},
-                      child: const CircleAvatar(
-                        radius: 35,
-                        backgroundImage:
-                            AssetImage('assets/images/profile.jpg'),
                       ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.27,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    for (int i = 0; i < 5; i++)
-                      popularList(
-                          'Lake Ciliwung',
-                          'Tangerang',
-                          'image 1.png',
-                          'Berada di jalur jalan provinsi yang menghubungkan Denpasar Singaraja serta letaknya yang dekat dengan Kebun Raya Eka Karya menjadikan tempat Bali.',
-                          ['carousell/3.jpg', 'carousell/4.jpg'],
-                          ['Kids Park', 'City Museum', 'Central Mall'],
-                          '2.500.000',
-                          4.8,
-                          ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 30, top: 30, right: 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('New This Year', style: titleGeneralText),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                    for (int i = 0; i < 5; i++)
-                      commonList(
-                          'Danau Deratan',
-                          'Singaraja',
-                          'image 2.png',
-                          'Pura Ulun Danu Beratan, pura yang sangat unik karena lokasi pura berada di tengah danau. Pada saat air danau naik, pura Ulun Danu Bratan Bedugul akan terlihat terapung pada permukaan air danau.',
-                          ['carousell/3.jpg', 'carousell/4.jpg'],
-                          ['Beautiful Lake', 'Shrine', 'Nature'],
-                          '1.500.000',
-                          4.8,
-                          ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.27,
+                        child: ListView.builder(
+                            itemCount: popularDest?.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              final item = popularDest?[index];
+
+                              return popularList(
+                                item['name'],
+                                item['location'],
+                                'image 1.png',
+                                item['description'],
+                                ['carousell/3.jpg', 'carousell/4.jpg'],
+                                List<String>.from(item['interest']),
+                                item['price'],
+                                item['rating'].toDouble(),
+                              );
+                            }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 30, top: 30, right: 30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('New This Year', style: titleGeneralText),
+                            SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02,
+                            ),
+                            for (int i = 0; i < commonDest!.length; i++)
+                              commonList(
+                                commonDest[i]['name'],
+                                commonDest[i]['location'],
+                                'image 2.png',
+                                commonDest[i]['description'],
+                                ['carousell/3.jpg', 'carousell/4.jpg'],
+                                List<String>.from(commonDest[i]['interest']),
+                                commonDest[i]['price'],
+                                commonDest[i]['rating'].toDouble(),
+                              ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
       ),
     );
   }
 
-  Widget popularList(String title, String destination, String image,
-      String desc, List<String> photos, List<String> interest, String price, double rating) {
+  Widget popularList(
+      String title,
+      String destination,
+      String image,
+      String desc,
+      List<String> photos,
+      List<String> interest,
+      int price,
+      double rating) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => DetailsPage(
-                title: title,
-                destination: destination,
-                image: image,
-                desc: desc,
-                photos: photos,
-                interest: interest,
-                price: price,
-                rating: rating,
-                ),
+              title: title,
+              destination: destination,
+              image: image,
+              desc: desc,
+              photos: photos,
+              interest: interest,
+              price: price,
+              rating: rating,
+            ),
           ),
         );
       },
@@ -176,7 +229,7 @@ class _HomePageState extends State<HomePage> {
     String desc,
     List<String> photos,
     List<String> interest,
-    String price,
+    int price,
     double rating,
   ) {
     return GestureDetector(
@@ -184,15 +237,15 @@ class _HomePageState extends State<HomePage> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => DetailsPage(
-                title: title,
-                destination: destination,
-                image: image,
-                desc: desc,
-                photos: photos,
-                interest: interest,
-                price: price,
-                rating: rating,
-                ),
+              title: title,
+              destination: destination,
+              image: image,
+              desc: desc,
+              photos: photos,
+              interest: interest,
+              price: price,
+              rating: rating,
+            ),
           ),
         );
       },

@@ -31,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> loginByUsername(String username, String password) async {
     AuthService authService = AuthService();
     Object result = await authService.databaseLogin(username, password);
+    
     await loginNavigate(result);
   }
 
@@ -41,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         isLoading = false;
       });
-      await Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
+      await Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage(firstname: data['data']['firstname'],)), (route) => false);
     } else {
       setState(() {
         isLoading = false;
@@ -104,6 +105,9 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.error_outline_rounded, color: redColor, size: 20,),
+                        const SizedBox(
+                          width: 5,
+                        ),
                         Text(errorMessage, style: errorText,),
                       ],
                     ),

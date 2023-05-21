@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "738451957613",
+    "project_id": "airplane-storage",
+    "storage_bucket": "airplane-storage.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:738451957613:android:f04dc97913dde7e5871c64",
+        "android_client_info": {
+          "package_name": "com.example.ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "738451957613-877qlt3g53cdfspptjo8v2e955ududde.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpg_YWLM2u45JluiDjCw0PUcKAzIyUz-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "738451957613-877qlt3g53cdfspptjo8v2e955ududde.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

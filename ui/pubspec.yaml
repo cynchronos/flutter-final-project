@@ -39,6 +39,10 @@ dependencies:
   show_up_animation: ^2.0.0
   loading_animation_widget: ^1.2.0+4
   carousel_slider: ^4.2.1
+  firebase_core: ^2.13.0
+  firebase_storage: ^11.2.1
+  firebase: ^9.0.3
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
