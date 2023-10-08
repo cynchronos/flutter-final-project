@@ -1,8 +1,10 @@
 # flutter-final-project
 UTY Bootcamp Flutter Final Project
 
-Aplikasi ini sedang proses pengembangan backend, terima kasih telah menunggu
+Aplikasi ini dibuat menggunakan teknologi
 
-Jika ingin mencoba ui maka saat login gunakan ini
-<br/>username: dev
-<br/>password: dev
+<ul>
+  <li>Flutter</li>
+  <li>NestJS</li>
+  <li>MongoDB</li>
+</ul>
